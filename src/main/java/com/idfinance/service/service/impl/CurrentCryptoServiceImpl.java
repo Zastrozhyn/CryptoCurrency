@@ -39,14 +39,15 @@ public class CurrentCryptoServiceImpl implements CurrentCryptoService {
     }
 
     @Override
-    public CurrentCrypto findCryptoByCode(String code) {
-        return currentCryptoRepository.findBySymbol(code)
+    public CurrentCryptoDto findCryptoByCode(String code) {
+        CurrentCrypto currentCrypto = currentCryptoRepository.findBySymbolContainingIgnoreCase(code)
                 .orElseThrow(() -> new EntityException(ExceptionCode.CRYPTO_NOT_FOUND.getErrorCode()));
+        return mapper.mapToDto(currentCrypto);
     }
 
     @Override
-    public List<CurrentCrypto> findAllCrypto(Pageable pageable) {
-        return currentCryptoRepository.findAll(pageable).getContent();
+    public List<CurrentCryptoDto> findAllCrypto(Pageable pageable) {
+        return mapper.mapToDto(currentCryptoRepository.findAll(pageable).getContent());
     }
 
     @Override
