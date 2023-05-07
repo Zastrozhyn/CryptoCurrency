@@ -12,6 +12,8 @@ import lombok.extern.log4j.Log4j2;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -20,6 +22,7 @@ import java.util.List;
 
 @Service
 @Log4j2
+@EnableScheduling
 public class CurrentCryptoServiceImpl implements CurrentCryptoService {
 
     private final CurrentCryptoRepository currentCryptoRepository;
@@ -47,11 +50,11 @@ public class CurrentCryptoServiceImpl implements CurrentCryptoService {
     }
 
     @Override
+    @Scheduled(cron = "${CryptoApi.scheduled.cron.expression}")
     public void updateAllCrypto() {
         List<String> urls = availableCryptoUtil.getUrlsForUpdateCryptos();
         for (String url:urls){
             currentCryptoRepository.save(mapper.mapToEntity(readCryptoFromExternalApi(url)));
-            System.out.println(readCryptoFromExternalApi(url));
         }
     }
 
