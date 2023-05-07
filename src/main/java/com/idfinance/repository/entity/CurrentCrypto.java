@@ -17,12 +17,12 @@ import java.math.BigDecimal;
 public class CurrentCrypto implements BaseEntity<Long>{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
 
     private String symbol;
 
+    @Column(name = "price")
     private BigDecimal priceUsd;
 }

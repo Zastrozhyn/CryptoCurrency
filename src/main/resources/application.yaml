@@ -5,3 +5,6 @@ spring:
     url: jdbc:postgresql://localhost:5432/crypto
   liquibase:
     enabled: true
+CryptoApi:
+  url: https://api.coinlore.net/api/ticker/?id=
+  cryptosId: 90, 80, 48543
