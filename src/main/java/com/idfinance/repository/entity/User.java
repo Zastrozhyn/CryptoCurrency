@@ -1,16 +1,17 @@
 package com.idfinance.repository.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
+@EqualsAndHashCode
+@ToString
 @Table(name = "users")
 public class User implements BaseEntity<Long>{
 
@@ -22,5 +23,9 @@ public class User implements BaseEntity<Long>{
 
     @OneToMany
     @JoinColumn(name = "user_id")
-    private List<RegisteredCrypto> cryptoRegisteredList;
+    private Set<RegisteredCrypto> cryptoRegisteredSet = new HashSet<>();
+
+    public User(String name) {
+        this.name = name;
+    }
 }
