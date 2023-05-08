@@ -13,3 +13,5 @@ CryptoApi:
   scheduled:
     cron:
       expression: 0 * * * * *
+Currency:
+  percentChangingToAlert: 1

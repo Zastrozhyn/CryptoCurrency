@@ -1,6 +1,5 @@
 package com.idfinance.service.service;
 
-import com.idfinance.repository.entity.CurrentCrypto;
 import com.idfinance.service.dto.CurrentCryptoDto;
 import org.springframework.data.domain.Pageable;
 

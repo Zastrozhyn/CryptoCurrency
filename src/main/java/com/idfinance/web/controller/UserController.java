@@ -21,7 +21,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping
+    @PostMapping("/notify")
     @ResponseStatus(HttpStatus.CREATED)
     public RegisteredCrypto registerUser(@RequestParam(name = "userName") String userName,
                                          @RequestParam(name = "code") String code) {
