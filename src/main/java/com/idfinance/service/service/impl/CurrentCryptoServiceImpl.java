@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
@@ -52,6 +53,7 @@ public class CurrentCryptoServiceImpl implements CurrentCryptoService {
 
     @Override
     @Scheduled(cron = "${CryptoApi.scheduled.cron.expression}")
+    @Transactional
     public void updateAllCrypto() {
         List<String> urls = availableCryptoUtil.getUrlsForUpdateCryptos();
         for (String url:urls){

@@ -10,13 +10,16 @@ import com.idfinance.service.exception.ExceptionCode;
 import com.idfinance.service.mapper.CurrentCryptoMapper;
 import com.idfinance.service.service.CurrentCryptoService;
 import com.idfinance.service.service.UserService;
+import jakarta.annotation.PostConstruct;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -25,6 +28,7 @@ public class UserServiceImpl implements UserService {
     private final RegisteredCryptoRepository registeredCryptoRepository;
     private final UserRepository userRepository;
     private final CurrentCryptoMapper mapper = Mappers.getMapper(CurrentCryptoMapper.class);
+    private Set<User> userCache;
 
     @Autowired
     public UserServiceImpl(CurrentCryptoService currentCryptoService,
@@ -34,6 +38,11 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
+    @PostConstruct
+    private void init(){
+        userCache = new HashSet<>(findAllUser());
+    }
+
     @Override
     @Transactional
     public RegisteredCrypto registerUser(String userName, String code) {
@@ -41,10 +50,11 @@ public class UserServiceImpl implements UserService {
         CurrentCrypto currentCrypto = mapper.mapToEntity(currentCryptoService.findCryptoByCode(code));
         RegisteredCrypto registeredCrypto = new RegisteredCrypto(currentCrypto, user);
         if (user.getCryptoRegisteredSet().contains(registeredCrypto)){
-            System.out.println("+++++++++");
             registeredCryptoRepository.deleteBySymbolAndUserId(registeredCrypto.getSymbol(), user.getId());
         }
-        return registeredCryptoRepository.save(new RegisteredCrypto(currentCrypto, user));
+        RegisteredCrypto result = registeredCryptoRepository.save(new RegisteredCrypto(currentCrypto, user));
+        userCache.add(findUserById(user.getId()));
+        return result;
     }
 
     @Override
@@ -54,6 +64,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> findAllUser(Pageable pageable) {
+        System.out.println(userCache);
         return userRepository.findAll(pageable).getContent();
+    }
+
+    private List<User> findAllUser(){
+        return userRepository.findAll();
     }
 }

@@ -10,7 +10,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @Entity
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = "cryptoRegisteredSet")
 @ToString
 @Table(name = "users")
 public class User implements BaseEntity<Long>{
@@ -21,7 +21,7 @@ public class User implements BaseEntity<Long>{
 
     private String name;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private Set<RegisteredCrypto> cryptoRegisteredSet = new HashSet<>();
 
