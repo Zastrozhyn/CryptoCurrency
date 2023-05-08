@@ -19,4 +19,5 @@ REST Application for tracking cryptocurrency rates. According Richardson Maturit
 - Liquibase
 - Mapstruct
 - Lombok
+- Testcontainers for Java
 
