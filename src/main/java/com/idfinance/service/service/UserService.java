@@ -9,7 +9,10 @@ import java.util.List;
 
 public interface UserService {
     RegisteredCrypto registerUser(String userName, String code);
+
     User findUserById(Long userId);
+
     List<User> findAllUser(Pageable pageable);
+
     void alertCurrencyChanging(CurrentCrypto currentCrypto);
 }

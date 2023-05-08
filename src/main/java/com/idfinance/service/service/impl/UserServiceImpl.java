@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @PostConstruct
-    private void init(){
+    private void init() {
         userCache = new HashSet<>(findAllUser());
     }
 
@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
         CurrentCrypto currentCrypto = currentCryptoRepository.findBySymbolContainingIgnoreCase(code)
                 .orElseThrow(() -> new EntityException(ExceptionCode.CRYPTO_NOT_FOUND.getErrorCode()));
         RegisteredCrypto registeredCrypto = new RegisteredCrypto(currentCrypto, user);
-        if (user.getCryptoRegisteredSet().contains(registeredCrypto)){
+        if (user.getCryptoRegisteredSet().contains(registeredCrypto)) {
             registeredCryptoRepository.deleteBySymbolAndUserId(registeredCrypto.getSymbol(), user.getId());
         }
         RegisteredCrypto result = registeredCryptoRepository.save(new RegisteredCrypto(currentCrypto, user));
@@ -72,8 +72,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void alertCurrencyChanging(CurrentCrypto currentCrypto){
-        for(User user: userCache){
+    public void alertCurrencyChanging(CurrentCrypto currentCrypto) {
+        for (User user : userCache) {
             user.getCryptoRegisteredSet().stream()
                     .filter(crypto -> crypto.getSymbol().equals(currentCrypto.getSymbol()))
                     .filter(crypto -> isCurrencyChangedMoreThenSpecified(currentCrypto, crypto))
@@ -81,15 +81,15 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private List<User> findAllUser(){
+    private List<User> findAllUser() {
         return userRepository.findAll();
     }
 
-    private boolean isCurrencyChangedMoreThenSpecified(CurrentCrypto currentCrypto, RegisteredCrypto registeredCrypto){
+    private boolean isCurrencyChangedMoreThenSpecified(CurrentCrypto currentCrypto, RegisteredCrypto registeredCrypto) {
         return CurrencyCalculator.percentChanging(currentCrypto, registeredCrypto) > percentChanging;
     }
 
-    private void alert(User user, CurrentCrypto currentCrypto, RegisteredCrypto registeredCrypto){
+    private void alert(User user, CurrentCrypto currentCrypto, RegisteredCrypto registeredCrypto) {
         float percentChanging = CurrencyCalculator.percentChanging(currentCrypto, registeredCrypto);
         log.warn(user.getName() + ": " + registeredCrypto.getSymbol() + ": current price=" + currentCrypto.getPriceUsd()
                 + ", registered price= " + registeredCrypto.getPriceUsd() + " %=" + percentChanging);

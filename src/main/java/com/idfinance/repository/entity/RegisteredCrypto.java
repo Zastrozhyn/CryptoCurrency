@@ -27,7 +27,7 @@ public class RegisteredCrypto {
     @Column(name = "user_id")
     private Long userId;
 
-    public RegisteredCrypto(CurrentCrypto crypto, User user){
+    public RegisteredCrypto(CurrentCrypto crypto, User user) {
         this.name = crypto.getName();
         this.priceUsd = crypto.getPriceUsd();
         this.symbol = crypto.getSymbol();

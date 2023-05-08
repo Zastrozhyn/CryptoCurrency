@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 @Table(name = "crypto_current")
-public class CurrentCrypto implements BaseEntity<Long>{
+public class CurrentCrypto implements BaseEntity<Long> {
 
     @Id
     private Long id;

@@ -9,7 +9,7 @@ import java.util.List;
 
 @Mapper
 public interface CurrentCryptoMapper {
-    CurrentCrypto mapToEntity (CurrentCryptoDto model);
+    CurrentCrypto mapToEntity(CurrentCryptoDto model);
 
     CurrentCryptoDto mapToDto(CurrentCrypto entity);
 

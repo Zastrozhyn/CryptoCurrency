@@ -45,7 +45,7 @@ public class CurrentCryptoServiceImpl implements CurrentCryptoService {
     }
 
     @PostConstruct
-    private void init(){
+    private void init() {
         findAllCrypto().forEach(o -> cryptoCache.put(o.getSymbol(), o));
     }
 
@@ -66,10 +66,10 @@ public class CurrentCryptoServiceImpl implements CurrentCryptoService {
     @Transactional
     public void updateAllCrypto() {
         List<String> urls = availableCryptoUtil.getUrlsForUpdateCryptos();
-        for (String url:urls){
+        for (String url : urls) {
             CurrentCrypto currentCrypto = mapper.mapToEntity(readCryptoFromExternalApi(url));
             userService.alertCurrencyChanging(currentCrypto);
-            if (isPriceChanged(currentCrypto)){
+            if (isPriceChanged(currentCrypto)) {
                 currentCryptoRepository.save(currentCrypto);
                 cryptoCache.remove(currentCrypto.getSymbol());
                 cryptoCache.put(currentCrypto.getSymbol(), currentCrypto);
@@ -80,7 +80,7 @@ public class CurrentCryptoServiceImpl implements CurrentCryptoService {
     private CurrentCryptoDto readCryptoFromExternalApi(String url) {
         CurrentCryptoDto[] cryptos = restTemplate
                 .getForObject(url, CurrentCryptoDto[].class);
-        if (cryptos!= null && cryptos.length > 0){
+        if (cryptos != null && cryptos.length > 0) {
             return cryptos[0];
         } else {
             log.warn(ExceptionCode.CAN_NOT_READ_CRYPTO + url + LocalDateTime.now());
@@ -92,7 +92,7 @@ public class CurrentCryptoServiceImpl implements CurrentCryptoService {
         return currentCryptoRepository.findAll();
     }
 
-    private boolean isPriceChanged(CurrentCrypto crypto){
+    private boolean isPriceChanged(CurrentCrypto crypto) {
         return !crypto.getPriceUsd().equals(cryptoCache.get(crypto.getSymbol()).getPriceUsd());
     }
 }
