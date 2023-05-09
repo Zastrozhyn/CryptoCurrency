@@ -1,0 +1,63 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-tables
+      author: Zastrozhyn
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar
+        - createTable:
+            tableName: crypto_current
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar
+              - column:
+                  name: symbol
+                  type: varchar
+              - column:
+                  name: price
+                  type: money
+        - createTable:
+            tableName: registered_crypto
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar
+              - column:
+                  name: symbol
+                  type: varchar
+              - column:
+                  name: price
+                  type: money
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: crypto_user_id_fk
+                    referencedTableName: users
+                    referencedColumnNames: id
