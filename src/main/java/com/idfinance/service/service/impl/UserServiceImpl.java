@@ -10,6 +10,7 @@ import com.idfinance.service.exception.EntityException;
 import com.idfinance.service.exception.ExceptionCode;
 import com.idfinance.service.service.UserService;
 import com.idfinance.service.util.CurrencyCalculator;
+import com.idfinance.service.util.UserValidator;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ public class UserServiceImpl implements UserService {
 
     private final CurrentCryptoRepository currentCryptoRepository;
     private final RegisteredCryptoRepository registeredCryptoRepository;
+    private final UserValidator validator;
     private final UserRepository userRepository;
     private Set<User> userCache;
     @Value("${Currency.percentChangingToAlert}")
@@ -35,9 +37,11 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     public UserServiceImpl(CurrentCryptoRepository currentCryptoRepository,
-                           RegisteredCryptoRepository registeredCryptoRepository, UserRepository userRepository) {
+                           RegisteredCryptoRepository registeredCryptoRepository, UserValidator validator,
+                           UserRepository userRepository) {
         this.currentCryptoRepository = currentCryptoRepository;
         this.registeredCryptoRepository = registeredCryptoRepository;
+        this.validator = validator;
         this.userRepository = userRepository;
     }
 
@@ -49,6 +53,9 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public RegisteredCrypto registerUser(String userName, String code) {
+        if (!validator.isUserNameValid(userName)){
+            throw new EntityException(ExceptionCode.NOT_VALID_USERNAME.getErrorCode());
+        }
         User user = userRepository.findUserByName(userName).orElseGet(() -> userRepository.save(new User(userName)));
         CurrentCrypto currentCrypto = currentCryptoRepository.findBySymbolContainingIgnoreCase(code)
                 .orElseThrow(() -> new EntityException(ExceptionCode.CRYPTO_NOT_FOUND.getErrorCode()));
